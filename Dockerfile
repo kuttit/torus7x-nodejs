@@ -1,21 +1,17 @@
-FROM 192.168.2.243:5000/gss-node-alpine-20:3.18.4-1
 
-RUN addgroup -g 700 npssuser
+FROM node:18-alpine
 
-RUN adduser -G npssuser -D -u 700 -S -H -s /bin/sh npssuser
 
-RUN mkdir -p /home/torus/6.0/
+WORKDIR /app
 
-COPY repos /home/torus/6.0/
 
-COPY startscript.sh /home/
+COPY package*.json ./
 
-RUN chmod -R 777 /home/startscript.sh
+RUN npm install
 
-RUN chown -R npssuser:npssuser /home/
+COPY . .
 
-USER npssuser
+EXPOSE 3000
 
-WORKDIR /home
 
-CMD sh -C 'startscript.sh';'sh'
+CMD ["node", "app.js"]
